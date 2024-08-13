@@ -1,4 +1,4 @@
-﻿# Visual Studio 2015 user specific files
+# Visual Studio 2015 user specific files
 .vs/
 .vsconfig
 
@@ -75,3 +75,6 @@ Plugins/**/Intermediate/*
 DerivedDataCache/*
 
 .idea/*
+
+# Ignore .ini files that have secrets
+Config/DefaultSecrets.ini
