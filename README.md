@@ -2,6 +2,8 @@
 
 A minimal working example of how to interact with the BeamClient in the beam-sdk-unreal plugin.
 
+Note: Blueprints were created in UE 5.2.1, so only versions newer than that are likely to work.
+
 ## Setup
 
 ### Prerequisites
