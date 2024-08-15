@@ -1,9 +1,10 @@
 ﻿#include "SessionExamples.h"
 #include "BeamExample/ExampleGameInstance.h"
+#include "KeyPair.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBeamSessionApi, Log, All);
 
-void USessionExamples::CreateSession(FString EntityId)
+void USessionExamples::CreateSession(FString EntityId, FOnCreateSessionResponse Callback)
 {
 	UE_LOG(LogBeamSessionApi, Log, TEXT("%hs"), __func__);
 
@@ -28,24 +29,26 @@ void USessionExamples::CreateSession(FString EntityId)
 		return;
 	}
 	
-	// KeyPair KeyPair;
-	// BeamClient->GetOrCreateSigningKeyPair(KeyPair, EntityId);
-	
+	KeyPair keyPair;
+	BeamClient->GetOrCreateSigningKeyPair(keyPair, EntityId, true);
+
 	auto Request =PlayerClientSessionsApi::CreateSessionRequestRequest();
 	Request.EntityId = EntityId;
 	Request.PlayerClientGenerateSessionUrlRequestInput.ChainId = 13337;
-	Request.PlayerClientGenerateSessionUrlRequestInput.Address = "<PUT_YOUR_ADDRESS_HERE>";
+	Request.PlayerClientGenerateSessionUrlRequestInput.Address = keyPair.GetAddress().c_str();
 	
-	auto Callback = PlayerClientSessionsApi::FCreateSessionRequestDelegate::CreateUObject(
-		this, &USessionExamples::OnCreateSessionResponse);
+	auto ResponseCallback = PlayerClientSessionsApi::FCreateSessionRequestDelegate::CreateUObject(
+		this, &USessionExamples::OnCreateSessionResponse, Callback);
 	
-	SessionApi->CreateSessionRequest(Request, Callback);
+	SessionApi->CreateSessionRequest(Request, ResponseCallback);
 }
 
 void USessionExamples::OnCreateSessionResponse(
-	const PlayerClientSessionsApi::CreateSessionRequestResponse& Response)
+	const PlayerClientSessionsApi::CreateSessionRequestResponse& Response, FOnCreateSessionResponse Callback)
 {
 	UE_LOG(LogBeamSessionApi, Log, TEXT("%hs: code=%d"), __func__, Response.GetHttpResponseCode());
+
+	Callback.ExecuteIfBound(Response.GetHttpResponse()->GetContentAsString());
 
 	if (!Response.IsSuccessful())
 	{
@@ -75,4 +78,7 @@ void USessionExamples::OnCreateSessionResponse(
 	}
 
 	// TODO: Start polling for the session creation result
+
+
+
 }

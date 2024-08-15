@@ -5,6 +5,8 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "SessionExamples.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnCreateSessionResponse, FString, Response);
+
 UCLASS()
 class BEAMEXAMPLE_API USessionExamples : public UGameInstanceSubsystem
 {
@@ -12,6 +14,6 @@ class BEAMEXAMPLE_API USessionExamples : public UGameInstanceSubsystem
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void CreateSession(FString EntityId);
-	void OnCreateSessionResponse(const OpenAPI::PlayerClientSessionsApi::CreateSessionRequestResponse& Response);
+	void CreateSession(FString EntityId, FOnCreateSessionResponse Callback);
+	void OnCreateSessionResponse(const OpenAPI::PlayerClientSessionsApi::CreateSessionRequestResponse& Response, FOnCreateSessionResponse Callback);
 };
