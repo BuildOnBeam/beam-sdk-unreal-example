@@ -1,4 +1,4 @@
-﻿#include "HealthExamples.h"
+#include "HealthExamples.h"
 #include "PlayerClientHealthApi.h"
 #include "PlayerClientHealthApiOperations.h"
 #include "BeamExample/ExampleGameInstance.h"
@@ -12,21 +12,21 @@ void UHealthExamples::CheckHealth(FOnHealthCheckResponse Callback)
 	UExampleGameInstance* GameInstance = Cast<UExampleGameInstance>(GetGameInstance());
 	if (!IsValid(GameInstance))
 	{
-		UE_LOG(LogBeamHealthApi, Error, TEXT("%hs: Invalid ExampleGameInstance"), __func__);
+		Callback.ExecuteIfBound("Invalid ExampleGameInstance");
 		return;
 	}
 
 	UBeamClient* BeamClient = GameInstance->BeamClient;
 	if (!IsValid(BeamClient))
 	{
-		UE_LOG(LogBeamHealthApi, Error, TEXT("%hs: Invalid BeamClient"), __func__);
+		Callback.ExecuteIfBound("Invalid BeamClient");
 		return;
 	}
 
 	TSharedPtr<PlayerClientHealthApi> HealthApi = BeamClient->HealthApi;
 	if (!HealthApi.IsValid())
 	{
-		UE_LOG(LogBeamHealthApi, Error, TEXT("%hs: Invalid HealthApi"), __func__);
+		Callback.ExecuteIfBound("Invalid HealthApi");
 		return;
 	}
 	
@@ -41,14 +41,13 @@ void UHealthExamples::OnCheckResponse(const PlayerClientHealthApi::CheckResponse
 	
 	if (!Response.IsSuccessful())
 	{
-		UE_LOG(LogBeamHealthApi, Error, TEXT("%hs: Failed to execute health check request"), __func__);
+		Callback.ExecuteIfBound("Failed to execute health check request");
 		return;
 	}
 	
 	if (!EHttpResponseCodes::IsOk(Response.GetHttpResponseCode()))
 	{
-		UE_LOG(LogBeamHealthApi, Error, TEXT("%hs: Failed health check with api response: code=%d, body=%s"),
-			__func__, Response.GetHttpResponse()->GetResponseCode(), *Response.GetHttpResponse()->GetContentAsString());
+		Callback.ExecuteIfBound(FString::Printf(TEXT("Failed HealthCheck with code=%d"), Response.GetHttpResponseCode()));
 		return;
 	}
 	
