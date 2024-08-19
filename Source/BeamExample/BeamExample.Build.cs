@@ -17,6 +17,7 @@ public class BeamExample : ModuleRules
 	        "Engine",
 	        "InputCore",
 	        "BeamSDK",
+	        "UMG"
         });
     }
 }
