@@ -7,7 +7,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogBeamSessionApi, Log, All);
 void USessionExamples::CreateSession(FString EntityId, FOnCreateSessionResponse Callback)
 {
 	UE_LOG(LogBeamSessionApi, Log, TEXT("%hs"), __func__);
-
+	
 	UExampleGameInstance* GameInstance = Cast<UExampleGameInstance>(GetGameInstance());
 	if (!IsValid(GameInstance))
 	{
@@ -21,7 +21,7 @@ void USessionExamples::CreateSession(FString EntityId, FOnCreateSessionResponse 
 		UE_LOG(LogBeamSessionApi, Error, TEXT("%hs: Invalid BeamClient"), __func__);
 		return;
 	}
-	
+
 	auto SessionApi = BeamClient->SessionsApi;
 	if (!SessionApi.IsValid())
 	{
@@ -31,8 +31,8 @@ void USessionExamples::CreateSession(FString EntityId, FOnCreateSessionResponse 
 	
 	KeyPair keyPair;
 	BeamClient->GetOrCreateSigningKeyPair(keyPair, EntityId, true);
-
-	auto Request =PlayerClientSessionsApi::CreateSessionRequestRequest();
+	
+	auto Request = PlayerClientSessionsApi::CreateSessionRequestRequest();
 	Request.EntityId = EntityId;
 	Request.PlayerClientGenerateSessionUrlRequestInput.ChainId = 13337;
 	Request.PlayerClientGenerateSessionUrlRequestInput.Address = keyPair.GetAddress().c_str();
@@ -71,14 +71,9 @@ void USessionExamples::OnCreateSessionResponse(
 	}
 	
 	FString Params, LaunchUrlError;
-	BeamClient->LaunchURL(*Response.Content.Url, Params, LaunchUrlError);
+	FPlatformProcess::LaunchURL(*Response.Content.Url, *Params, &LaunchUrlError);
 	if (!LaunchUrlError.IsEmpty()) {
 		UE_LOG(LogBeamSessionApi, Error, TEXT("%hs: Failed to call LaunchURL: error=%s"), __func__, *LaunchUrlError);
 		return;
 	}
-
-	// TODO: Start polling for the session creation result
-
-
-
 }

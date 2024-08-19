@@ -12,21 +12,21 @@ void UHealthExamples::CheckHealth(FOnHealthCheckResponse Callback)
 	UExampleGameInstance* GameInstance = Cast<UExampleGameInstance>(GetGameInstance());
 	if (!IsValid(GameInstance))
 	{
-		Callback.ExecuteIfBound("Invalid ExampleGameInstance");
+		Callback.Execute("Invalid ExampleGameInstance");
 		return;
 	}
 
 	UBeamClient* BeamClient = GameInstance->BeamClient;
 	if (!IsValid(BeamClient))
 	{
-		Callback.ExecuteIfBound("Invalid BeamClient");
+		Callback.Execute("Invalid BeamClient");
 		return;
 	}
 
 	TSharedPtr<PlayerClientHealthApi> HealthApi = BeamClient->HealthApi;
 	if (!HealthApi.IsValid())
 	{
-		Callback.ExecuteIfBound("Invalid HealthApi");
+		Callback.Execute("Invalid HealthApi");
 		return;
 	}
 	
@@ -42,15 +42,15 @@ void UHealthExamples::OnCheckResponse(const PlayerClientHealthApi::CheckResponse
 	
 	if (!Response.IsSuccessful())
 	{
-		Callback.ExecuteIfBound("Failed to execute health check request");
+		Callback.Execute("Failed to execute health check request");
 		return;
 	}
 	
 	if (!EHttpResponseCodes::IsOk(Response.GetHttpResponseCode()))
 	{
-		Callback.ExecuteIfBound(FString::Printf(TEXT("Failed HealthCheck with code=%d"), Response.GetHttpResponseCode()));
+		Callback.Execute(FString::Printf(TEXT("Failed HealthCheck with code=%d"), Response.GetHttpResponseCode()));
 		return;
 	}
 	
-	Callback.ExecuteIfBound(Response.GetHttpResponse()->GetContentAsString());
+	Callback.Execute(Response.GetHttpResponse()->GetContentAsString());
 }
