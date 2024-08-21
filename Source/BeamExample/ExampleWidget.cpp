@@ -21,13 +21,13 @@ void UExampleWidget::CreateSession(FString EntityId, FOnCreateSessionResponse Ca
 	}
 	
 	BeamClient->CreateSessionAsync(EntityId)
-	.Next([&](const TBeamResult<FBeamSession>& Response)
+	.Next([&, Callback](const TBeamResult<FBeamSession>& Response)
 	{
-		UE_LOG(LogExampleWidget, Log, TEXT("%hs: Status=%d"), __func__, static_cast<int>(Response.Status));
+		UE_LOG(LogExampleWidget, Log, TEXT("%hs: Status=%d"), __func__, (int)Response.Status);
 		if (!Response.Error.IsEmpty())
 		{
 			Callback.Execute("", "", Response.Error);
-			return;	
+			return;
 		}
 		
 		// Note: This is a simple example, in a real application you will likely want to do more with the
