@@ -78,3 +78,6 @@ DerivedDataCache/*
 
 # Ignore .ini files that have secrets
 Config/DefaultSecrets.ini
+
+# Ignore .ini files generated for HoloLens
+/Platforms/HoloLens
