@@ -21,10 +21,11 @@ void UExampleWidget::CreateSession(FString EntityId, FOnCreateSessionResponse Ca
 	}
 	
 	BeamClient->CreateSessionAsync(EntityId)
-	.Next([&, Callback](const TBeamResult<FBeamSession>& Response)
+	.Next([&, Callback](const BeamSessionResult& Response)
 	{
-		UE_LOG(LogExampleWidget, Log, TEXT("%hs: Status=%d"), __func__, (int)Response.Status);
-		if (!Response.Error.IsEmpty())
+		FString responseStatus = UEnum::GetDisplayValueAsText(Response.Status).ToString();
+		UE_LOG(LogExampleWidget, Log, TEXT("CreateSessionAsync: Status=%s"), *responseStatus);
+		if (Response.Status == EBeamResultType::Error)
 		{
 			Callback.Execute("", "", Response.Error);
 			return;
@@ -33,6 +34,40 @@ void UExampleWidget::CreateSession(FString EntityId, FOnCreateSessionResponse Ca
 		// Note: This is a simple example, in a real application you will likely want to do more with the
 		//   results than stringify and return them.
 		Callback.Execute(Response.Result.Id, Response.Result.SessionAddress, "");
+	});
+}
+
+void UExampleWidget::RevokeSession(FString EntityId, FString SessionAddress, FOnRevokeSessionResponse Callback)
+{
+	UExampleGameInstance* GameInstance = Cast<UExampleGameInstance>(GetGameInstance());
+	if (!IsValid(GameInstance))
+	{
+		Callback.Execute("", "Invalid ExampleGameInstance");
+		return;
+	}
+
+	UBeamClient* BeamClient = GameInstance->BeamClient;
+	if (!IsValid(BeamClient))
+	{
+		Callback.Execute("", "Invalid BeamClient");
+		return;
+	}
+	
+	BeamClient->RevokeSessionAsync(EntityId, SessionAddress)
+	.Next([&, Callback](const BeamOperationResult& Response)
+	{
+		FString responseStatus = UEnum::GetDisplayValueAsText(Response.Status).ToString();
+		UE_LOG(LogExampleWidget, Log, TEXT("RevokeSessionAsync: Status=%s"), *responseStatus);
+		if (Response.Status == EBeamResultType::Error)
+		{
+			Callback.Execute("", Response.Error);
+			return;
+		}
+		
+		// Note: This is a simple example, in a real application you will likely want to do more with the
+		//   results than stringify and return them.
+		FString status = CommonOperationResponse::EnumToString(Response.Result);
+		Callback.Execute(status, "");
 	});
 }
 

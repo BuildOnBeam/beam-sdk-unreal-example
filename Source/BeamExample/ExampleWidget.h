@@ -11,10 +11,14 @@ class BEAMEXAMPLE_API UExampleWidget : public UUserWidget
 
 public:
 	DECLARE_DYNAMIC_DELEGATE_ThreeParams(FOnCreateSessionResponse, FString, Id, FString, Address, FString, ErrorMsg);
+	DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnRevokeSessionResponse, FString, Status, FString, ErrorMsg);
 	DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnSignOperationResponse, FString, Status, FString, ErrorMsg);
 	
 	UFUNCTION(BlueprintCallable)
 	void CreateSession(FString EntityId, FOnCreateSessionResponse Callback);
+
+	UFUNCTION(BlueprintCallable)
+	void RevokeSession(FString EntityId, FString SessionAddress, FOnRevokeSessionResponse Callback);
 
 	UFUNCTION(BlueprintCallable)
 	void SignOperation(FString EntityId, FString OperationId, FOnSignOperationResponse Callback);
