@@ -10,7 +10,7 @@ class BEAMEXAMPLE_API UExampleWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	DECLARE_DYNAMIC_DELEGATE_ThreeParams(FOnCreateSessionResponse, FString, Id, FString, Address, FString, ErrorMsg);
+	DECLARE_DYNAMIC_DELEGATE_FourParams(FOnCreateSessionResponse, FString, Id, FString, Address, FString, Status, FString, ErrorMsg);
 	DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnRevokeSessionResponse, FString, Status, FString, ErrorMsg);
 	DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnSignOperationResponse, FString, Status, FString, ErrorMsg);
 	
@@ -22,4 +22,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SignOperation(FString EntityId, FString OperationId, FOnSignOperationResponse Callback);
+
+public:
+	UPROPERTY(BlueprintReadWrite, Category = "Beam")
+	bool TestBrowserSigning = false;
 };

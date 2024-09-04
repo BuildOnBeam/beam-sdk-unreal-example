@@ -5,7 +5,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "HealthExamples.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnHealthCheckResponse, FString, Response);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnHealthCheckResponse, FString, Status, FString, Response);
 
 UCLASS()
 class UHealthExamples : public UGameInstanceSubsystem
