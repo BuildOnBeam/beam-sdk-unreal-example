@@ -2,18 +2,29 @@
 
 A minimal working example of how to interact with the BeamClient in the beam-sdk-unreal plugin.
 
-Note: Blueprints were created in UE 5.2.1, so only versions newer than that are likely to work.
+This demo integrates [Beam SDK Unreal](https://github.com/Merit-Circle/beam-sdk-unreal) to showcase how you can create an active session and use it to sign an operation.
+
+When running the demo, you will be greeted by a panel where you can interface with the Beam API:
+![img.png](img.png) 
+
+To create a session, enter a player name into the **Entity ID** box, and click **Create Session**.
+
+To sign an operation, enter an **Operation ID** into the specified box, and click **Sign Operation**.
+
+Note: The example Blueprints were created in UE 5.2.1, so only versions newer than that are likely to work with this demo.
+
+## Docs
+To read up on Sessions and Operations, please visit or [Player API docs](https://docs.onbeam.com/service/introduction-player-api).
 
 ## Setup
 
 ### Prerequisites
-The [beam-sdk-unreal](https://github.com/Merit-Circle/beam-sdk-unrea) repo is included as a submodule in this git repository under /Plugins/BeamSDK/.
+The [beam-sdk-unreal](https://github.com/Merit-Circle/beam-sdk-unreal) repo is included as a submodule in this git repository under /Plugins/BeamSDK/.
 
 If no files are present in this `/Plugins/BeamSDK/` directory, run this command at the project root to pull the submodule:
 > git submodule init
 
 Some git clients automatically prompt you to pull submodules when cloning a repository. If you are using one of these clients, you may not need to run the above command.
-
 
 ### Unreal Setup
 
@@ -33,3 +44,26 @@ Some git clients automatically prompt you to pull submodules when cloning a repo
 * `UExampleWidget` is the cpp class that the UI invokes
 * `WBP_BeamDialog` is the blueprint widget that the UI is built in
 * Additional usages of API calls can be found in the `/ExampleAPIs/` directory
+
+## BeamClient
+The base of entire SDK is BeamClient class. It's a class that extends UObject so it needs to be initialized via GameInstance or dependency injection framework of your choosing. 
+```cpp
+BeamStorage = UBeamSaveGameStorage::LoadOrCreate();
+BeamClient = NewObject<UBeamClient>(this)
+             ->SetBeamApiKey(BeamApiKey)
+             ->SetEnvironment(EBeamEnvironment::Testnet)
+             ->SetDebugLogging(true)
+             ->SetStorage(BeamStorage);
+```
+You can see an example of initializing the `BeamClient` in [ExampleGameInstance.cpp](https://github.com/Merit-Circle/beam-sdk-unreal-example/blob/ab46d9e17492b1dc7d5e04c8f5378bf3c7108097/Source/BeamExample/ExampleGameInstance.cpp#L24)
+
+## Session Creation
+To create a session, you can enter a user name in the `Entity Id` field, then press `Create Session` which will open the browser for the User to perform a social login. You will receive a callback with result of signing via Beam SDK.
+You can see an example of `CreateSession` in [ExampleWidget.cpp](https://github.com/Merit-Circle/beam-sdk-unreal-example/blob/ab46d9e17492b1dc7d5e04c8f5378bf3c7108097/Source/BeamExample/ExampleWidget.cpp#L7)
+
+## Signing Operations
+When performing an on-chain action in Beam Player API, you receive an Operation object in return. In order to actually perform the operation, you need to give us the `Operation Id`.
+To sign an operation, you can enter the operation ID in the `Operation Id` field, ensure that `Entity Id` field is also set, then press `Sign Operation`.
+We will either use an existing active session or open a browser for user to sign the operation.
+An operation can consist of multiple on-chain transactions that need signing, we will handle all of that for you.
+You can see an example of `SignOperation` in [ExampleWidget.cpp](https://github.com/Merit-Circle/beam-sdk-unreal-example/blob/ab46d9e17492b1dc7d5e04c8f5378bf3c7108097/Source/BeamExample/ExampleWidget.cpp#L58)
