@@ -66,4 +66,4 @@ When performing an on-chain action in Beam Player API, you receive an Operation 
 To sign an operation, you can enter the operation ID in the `Operation Id` field, ensure that `Entity Id` field is also set, then press `Sign Operation`.
 We will either use an existing active session or open a browser for user to sign the operation.
 An operation can consist of multiple on-chain transactions that need signing, we will handle all of that for you.
-You can see an example of `SignOperation` in [ExampleWidget.cpp](https://github.com/Merit-Circle/beam-sdk-unreal-example/blob/ab46d9e17492b1dc7d5e04c8f5378bf3c7108097/Source/BeamExample/ExampleWidget.cpp#L58)
+You can see an example of `SignOperation` in [ExampleWidget.cpp](https://github.com/Merit-Circle/beam-sdk-unreal-example/blob/ab46d9e17492b1dc7d5e04c8f5378bf3c7108097/Source/BeamExample/ExampleWidget.cpp#L74)
