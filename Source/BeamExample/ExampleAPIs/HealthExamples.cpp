@@ -31,7 +31,6 @@ void UHealthExamples::CheckHealth(FOnHealthCheckResponse Callback)
 	}
 	
 	PlayerClientHealthApi::CheckRequest Request = PlayerClientHealthApi::CheckRequest();
-	Request.SetShouldRetry(HttpRetryParams(10, 30));
 	auto OpenApiCallback = PlayerClientHealthApi::FCheckDelegate::CreateUObject(this, &UHealthExamples::OnCheckResponse, Callback);
 	HealthApi->Check(Request, OpenApiCallback);
 }
