@@ -50,7 +50,7 @@ void UExampleWidget::RevokeSession(FString EntityId, FString SessionAddress, FOn
 		
 		// Note: This is a simple example, in a real application you will likely want to do more with the
 		//   results than stringify and return them.
-		FString status = CommonOperationResponse::EnumToString(Response.Result);
+		FString status = PlayerOperationResponse::EnumToString(Response.Result);
 		Callback.Execute(status, "");
 	});
 }
@@ -77,7 +77,7 @@ void UExampleWidget::SignOperation(FString EntityId, FString OperationId, FOnSig
 		
 		// Note: This is a simple example, in a real application you will likely want to do more with the
 		//   results than stringify and return them.
-		FString status = CommonOperationResponse::EnumToString(Response.Result);
+		FString status = PlayerOperationResponse::EnumToString(Response.Result);
 		Callback.Execute(status, "");
 	});
 }
