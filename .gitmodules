@@ -1,3 +1,3 @@
 [submodule "beam-sdk-unreal"]
 	path = Plugins/BeamSDK
-	url = git@github.com:Merit-Circle/beam-sdk-unreal.git
+	url = git@github.com:buildonbeam/beam-sdk-unreal.git
